@@ -37,6 +37,19 @@ function toPositiveNumber(value: unknown, fallback: number): number {
 	return num > 0 ? num : fallback;
 }
 
+function toPositiveFloat(value: unknown, fallback: number): number {
+	if (typeof value === 'number' && Number.isFinite(value) && value > 0) {
+		return value;
+	}
+	if (typeof value === 'string') {
+		const parsed = Number.parseFloat(value);
+		if (Number.isFinite(parsed) && parsed > 0) {
+			return parsed;
+		}
+	}
+	return fallback;
+}
+
 function toMeta(value: unknown): string | null {
 	if (value === null || value === undefined || value === '') {
 		return null;
@@ -89,7 +102,7 @@ export function normalizePriceRows(
 				source: params.source,
 				material: String(item.material ?? 'gold'),
 				materialType: String(item.material_type ?? item.materialType ?? item.type ?? 'unknown'),
-				weight: toPositiveNumber(item.weight, 1),
+				weight: toPositiveFloat(item.weight, 1),
 				weightUnit: String(item.weight_unit ?? item.weightUnit ?? 'gr'),
 				sellPrice,
 				buybackPrice: buybackPriceRaw >= 0 ? buybackPriceRaw : null,
