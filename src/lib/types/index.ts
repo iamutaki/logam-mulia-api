@@ -12,6 +12,7 @@ export type {
 	AxiosScrapingConfig,
 	BaseScrapingConfig,
 	AnyScrapingConfig,
+	NewsDetailSelectors,
 } from './config.types';
 
 // Scraper/engine types

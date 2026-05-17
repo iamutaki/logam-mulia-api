@@ -4,7 +4,6 @@
 
 ## Todo
 
-- [ ] <https://emasantam.id/emas-antam-logam-mulia/>
 - [ ] <https://emaskita.id/Harga_emas>
 - [ ] <https://iloveemas.co.id/harga/>
 - [ ] <https://publicgold.co.id/>
@@ -47,6 +46,8 @@
 - [x] <https://www.logammulia.com/id>
 
 ## Blocked
+
+- [x] <https://emasantam.id/emas-antam-logam-mulia/> (unavailable)
 
 ---
 

@@ -14,6 +14,8 @@ export const priceItemSchema = z.object({
 	url: z.string().optional().openapi({ example: '/api/prices/anekalogam' }),
 	displayName: z.string().optional().openapi({ example: 'Aneka Logam' }),
 	logo: z.string().optional().openapi({ example: '' }),
+	favicon: z.string().nullable().optional().openapi({ example: null }),
+	cover: z.string().nullable().optional().openapi({ example: null }),
 	urlHomepage: z.string().optional().openapi({ example: 'https://www.anekalogam.co.id' }),
 }).openapi('PriceItem');
 
@@ -37,6 +39,8 @@ export const sourceInfoSchema = z.object({
 	name: z.string().openapi({ example: 'anekalogam' }),
 	displayName: z.string().optional().openapi({ example: 'Aneka Logam' }),
 	logo: z.string().optional(),
+	favicon: z.string().nullable().optional(),
+	cover: z.string().nullable().optional(),
 	url: z.string().openapi({ example: '/api/prices/anekalogam' }),
 	urlHomepage: z.string().optional().openapi({ example: 'https://www.anekalogam.co.id' }),
 }).openapi('SourceInfo');
@@ -56,6 +60,8 @@ export const historyItemSchema = z.object({
 	url: z.string().optional().openapi({ example: '/api/prices/anekalogam' }),
 	displayName: z.string().optional().openapi({ example: 'Aneka Logam' }),
 	logo: z.string().optional().openapi({ example: '' }),
+	favicon: z.string().nullable().optional().openapi({ example: null }),
+	cover: z.string().nullable().optional().openapi({ example: null }),
 	urlHomepage: z.string().optional().openapi({ example: 'https://www.anekalogam.co.id' }),
 }).openapi('HistoryItem');
 
@@ -72,3 +78,25 @@ export const historyResponseSchema = z.object({
 	pagination: historyPaginationSchema.optional(),
 	error: z.string().optional(),
 }).openapi('HistoryResponse');
+
+export const newsItemSchema = z.object({
+	source: z.string().openapi({ example: 'detik' }),
+	title: z.string().openapi({ example: 'Harga emas naik tipis hari ini' }),
+	url: z.string().openapi({ example: 'https://finance.detik.com/...' }),
+	publishedAt: z.string().openapi({ example: '2026-05-17T10:00:00Z' }),
+	summary: z.string().optional(),
+	category: z.string().optional(),
+	displayName: z.string().optional().openapi({ example: 'Detik Finance' }),
+	logo: z.string().optional(),
+	favicon: z.string().nullable().optional(),
+	cover: z.string().nullable().optional(),
+	urlHomepage: z.string().optional(),
+}).openapi('NewsItem');
+
+export const newsResponseSchema = z.object({
+	success: z.boolean().openapi({ example: true }),
+	data: z.array(newsItemSchema).optional(),
+	count: z.number().optional(),
+	timestamp: z.string(),
+	cached: z.boolean().optional(),
+}).openapi('NewsResponse');

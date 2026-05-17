@@ -83,6 +83,11 @@ export class HtmlScraper<T extends Record<string, string> = Record<string, strin
 			} else if (typeof selValue === 'string' && selValue.startsWith('html:')) {
 				const sel = selValue.slice('html:'.length);
 				rawData[key] = ($(sel).html() ?? '').trim();
+			} else if (typeof selValue === 'string' && selValue.startsWith('@')) {
+				const idx = selValue.indexOf('|');
+				const attr = selValue.slice(1, idx);
+				const sel = selValue.slice(idx + 1);
+				rawData[key] = ($(sel).attr(attr) ?? '').trim();
 			} else {
 				rawData[key] = $(selValue).text().trim();
 			}

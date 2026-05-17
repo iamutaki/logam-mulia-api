@@ -1,0 +1,8 @@
+import { investorIdConfig as config } from './config';
+import route from './route';
+
+export function register() {
+	return { name: config.name, displayName: config.displayName, logo: config.logo, favicon: (config as any).favicon ?? null, cover: (config as any).cover ?? null, urlHomepage: config.urlHomepage, url: config.url, route, cached: false };
+}
+export { config as investorIdConfig };
+export default route;
