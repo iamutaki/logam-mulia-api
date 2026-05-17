@@ -42,7 +42,7 @@ Dokumentasi interaktif OpenAPI 3.0 (auto-generated via `@hono/zod-openapi`) ters
 | anekalogam | ✅ | [`/anekalogam`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/anekalogam) | [`/anekalogam/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/anekalogam/history) | ✅ |
 | hargaemas-org | ✅ | [`/hargaemas-org`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-org) | [`/hargaemas-org/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-org/history) | ✅ |
 | lakuemas | ✅ | [`/lakuemas`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/lakuemas) | [`/lakuemas/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/lakuemas/history) | ✅ |
-| sakumas | ✅ | [`/sakumas`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/sakumas) | - | ❌ |
+| sakumas | ✅ | [`/sakumas`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/sakumas) | [`/sakumas/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/sakumas/history) | ✅ |
 | kursdolar | ✅ | [`/kursdolar`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/kursdolar) | [`/kursdolar/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/kursdolar/history) | ✅ |
 | cermati | ✅ | [`/cermati`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/cermati) | [`/cermati/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/cermati/history) | ✅ |
 | indogold | ✅ | [`/indogold`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/indogold) | [`/indogold/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/indogold/history) | ✅ |
