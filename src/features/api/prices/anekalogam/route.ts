@@ -1,12 +1,12 @@
 import { Hono } from 'hono';
 import type { Bindings } from '../../../../types';
-import { CheerioScraper, createErrorResponse, defaultScrapingOptions, parseCurrency } from '../../../../lib';
+import { createErrorResponse, defaultFetchOptions, HtmlScraper, parseCurrency } from '../../../../lib';
 import { fetchOrCache } from '../../../../lib/services/price-service';
 import { anekalogamConfig } from './config';
 
 const app = new Hono<{ Bindings: Bindings }>();
 
-const scraper = new CheerioScraper('anekalogam', anekalogamConfig);
+const scraper = new HtmlScraper('anekalogam', anekalogamConfig);
 
 app.get('/', async (c) => {
 	const refresh = c.req.query('refresh') === 'true';
@@ -20,7 +20,7 @@ app.get('/', async (c) => {
 				weight: raw.weight ? Number(raw.weight) : 1,
 				weightUnit: raw.weightUnit || 'gr',
 			}),
-			defaultScrapingOptions,
+			defaultFetchOptions,
 		),
 	);
 

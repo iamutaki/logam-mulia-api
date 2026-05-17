@@ -3,6 +3,8 @@ import { z } from 'zod';
 import {
 	errorResponseSchema,
 	historyResponseSchema,
+	newsItemSchema,
+	newsResponseSchema,
 	priceResponseSchema,
 	sourceInfoSchema,
 } from './schemas';
@@ -95,3 +97,41 @@ export const historyRoute = createRoute({
 	},
 	tags: ['History'],
 });
+
+export const listNewsSourcesRoute = createRoute({
+	method: 'get',
+	path: '/api/news',
+	request: {},
+	responses: {
+		200: {
+			content: { 'application/json': { schema: z.object({ data: z.array(sourceInfoSchema) }) } },
+			description: 'Daftar sumber berita yang tersedia',
+		},
+	},
+	tags: ['News'],
+});
+
+export function createNewsSourceRoute() {
+	return createRoute({
+		method: 'get',
+		path: '/',
+		request: {
+			query: z.object({
+				refresh: z.enum(['true']).optional().openapi({
+					description: 'Force re-scrape, bypass cache harian',
+				}),
+			}),
+		},
+		responses: {
+			200: {
+				content: { 'application/json': { schema: newsResponseSchema } },
+				description: 'Data berita terkini',
+			},
+			500: {
+				content: { 'application/json': { schema: errorResponseSchema } },
+				description: 'Gagal scrape',
+			},
+		},
+		tags: ['News'],
+	});
+}

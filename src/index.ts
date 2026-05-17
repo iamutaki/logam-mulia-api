@@ -2,6 +2,7 @@ import { OpenAPIHono } from '@hono/zod-openapi';
 import { Scalar } from '@scalar/hono-api-reference';
 import { createErrorResponse, getHistoryBySource } from './lib';
 import { registerPriceFeatures } from './lib/feature-registry';
+import { registerNewsFeatures } from './lib/news-registry';
 import type { Bindings } from './types';
 import rootRoute from './features/root';
 import healthRoute from './features/health';
@@ -13,6 +14,8 @@ app.route('/', rootRoute);
 app.route('/health', healthRoute);
 
 const SOURCES = registerPriceFeatures(app);
+
+registerNewsFeatures(app);
 
 app.openapi(listSourcesRoute, (c) => {
 	return c.json({ data: SOURCES });
@@ -46,6 +49,7 @@ app.get('/api/prices/:source/history', async (c) => {
 		url: info?.url ?? `/api/prices/${source}`,
 		displayName: info?.displayName,
 		logo: info?.logo,
+		favicon: info?.favicon ?? null,
 		urlHomepage: info?.urlHomepage,
 	};
 
@@ -70,6 +74,7 @@ app.doc('/api/docs/json', {
 		{ name: 'System', description: 'Root & health check' },
 		{ name: 'Sources', description: 'Daftar & harga dari sumber logam mulia' },
 		{ name: 'History', description: 'Riwayat harga' },
+		{ name: 'News', description: 'Berita logam mulia' },
 	],
 });
 

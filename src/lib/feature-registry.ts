@@ -7,6 +7,7 @@ export interface FeatureRegistration {
 	name: string;
 	displayName?: string;
 	logo?: string;
+	favicon?: string | null;
 	urlHomepage?: string;
 	route: Hono<{ Bindings: Bindings }>;
 	cached: boolean;
@@ -16,6 +17,7 @@ export interface SourceInfo {
 	name: string;
 	displayName?: string;
 	logo?: string;
+	favicon?: string | null;
 	url: string;
 	urlHomepage?: string;
 }
@@ -58,7 +60,7 @@ export function registerPriceFeatures(
 	const priceRoute = createPriceSourceRoute();
 
 	return priceModules.map((mod) => {
-		const { name, displayName, logo, urlHomepage, route } = mod.register();
+		const { name, displayName, logo, favicon, urlHomepage, route } = mod.register();
 		const sourceUrl = `/api/prices/${name}`;
 
 		app.openAPIRegistry.registerPath({ ...priceRoute, path: sourceUrl });
@@ -68,7 +70,7 @@ export function registerPriceFeatures(
 			try {
 				const clone = c.res.clone();
 				const json = (await clone.json()) as Record<string, unknown>;
-				const meta = { url: sourceUrl, displayName, logo, urlHomepage };
+				const meta = { url: sourceUrl, displayName, logo, favicon, urlHomepage };
 
 				if (Array.isArray(json.data)) {
 					json.data = (json.data as Record<string, unknown>[]).map(
@@ -85,6 +87,6 @@ export function registerPriceFeatures(
 		});
 		app.route(sourceUrl, route);
 
-		return { name, displayName, logo, url: sourceUrl, urlHomepage };
+		return { name, displayName, logo, favicon, url: sourceUrl, urlHomepage };
 	});
 }

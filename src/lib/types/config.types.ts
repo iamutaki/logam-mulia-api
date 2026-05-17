@@ -17,6 +17,7 @@ export interface HtmlScraperConfig<T extends string = string> {
 	name: string;
 	displayName?: string;
 	logo?: string;
+	favicon?: string | null;
 	urlHomepage?: string;
 	url: string;
 	engine: 'cheerio';
@@ -36,6 +37,7 @@ export interface JsonApiConfig {
 	name: string;
 	displayName?: string;
 	logo?: string;
+	favicon?: string | null;
 	urlHomepage?: string;
 	url: string;
 	engine: 'axios';
@@ -69,3 +71,15 @@ export type BaseScrapingConfig = BaseConfig;
 
 /** @deprecated Use AnyScraperConfig */
 export type AnyScrapingConfig<T extends string = string> = AnyScraperConfig<T>;
+
+export interface NewsDetailSelectors {
+	title: string;
+	author: string;
+	publishedAt: string;
+	content: string;
+	mainImage?: string;
+	imageCaption?: string;
+	updatedAt?: string;
+	tags?: string;
+	relatedNews?: string;
+}

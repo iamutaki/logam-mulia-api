@@ -1,5 +1,5 @@
 import { parseGramWeightLabel } from '../../../../lib/utils/parse-gram-weight-label';
-import type { ScrapingConfig } from '../../../../lib/types';
+import type { HtmlScraperConfig } from '../../../../lib/types';
 import { raw } from '../../../../lib/types';
 
 const certicardMaterialTypeSelector =
@@ -36,11 +36,12 @@ function makeItem(row: number, col: number) {
 	};
 }
 
-export const anekalogamConfig: ScrapingConfig<'buybackPrice' | 'sellPrice' | 'material' | 'materialType' | 'weight' | 'weightUnit' > = {
+export const anekalogamConfig: HtmlScraperConfig<'buybackPrice' | 'sellPrice' | 'material' | 'materialType' | 'weight' | 'weightUnit' > = {
 	name: 'anekalogam',
 	displayName: 'Aneka Logam',
 	logo: '',
 	urlHomepage: 'https://www.anekalogam.co.id',
+	favicon:"https://www.logammulia.com/apple-touch-icon.png",
 	engine: 'cheerio',
 	currency: 'IDR',
 	url: 'https://www.anekalogam.co.id/id',
