@@ -115,17 +115,38 @@ export function createNewsSourceRoute() {
 	return createRoute({
 		method: 'get',
 		path: '/',
+		request: {},
+		responses: {
+			200: {
+				content: { 'application/json': { schema: newsResponseSchema } },
+				description: 'Data berita terkini',
+			},
+			500: {
+				content: { 'application/json': { schema: errorResponseSchema } },
+				description: 'Gagal scrape',
+			},
+		},
+		tags: ['News'],
+	});
+}
+
+export function createNewsDetailRoute() {
+	return createRoute({
+		method: 'get',
+		path: '/detail',
 		request: {
 			query: z.object({
-				refresh: z.enum(['true']).optional().openapi({
-					description: 'Force re-scrape, bypass cache harian',
-				}),
+				url: z.string().openapi({ description: 'URL artikel yang akan di-scrape' }),
 			}),
 		},
 		responses: {
 			200: {
 				content: { 'application/json': { schema: newsResponseSchema } },
-				description: 'Data berita terkini',
+				description: 'Detail berita',
+			},
+			400: {
+				content: { 'application/json': { schema: errorResponseSchema } },
+				description: 'Missing url parameter',
 			},
 			500: {
 				content: { 'application/json': { schema: errorResponseSchema } },

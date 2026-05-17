@@ -14,12 +14,13 @@ function makeArticleItem(index: number) {
 			title: `${article} > a > h4`,
 			summary: `${article} > span.text-muted.text-truncate-2-lines`,
 			url: `@href|${article} > a:nth-child(4)`,
+			cover: `@src|body > main > div:nth-child(3) > div > div.col > div:nth-child(${n}) > div.col-4 > a > div > img`,
 		},
 	};
 }
 
 export const investorIdConfig: HtmlScraperConfig<
-	'title' | 'url' | 'publishedAt' | 'summary' | 'category'
+	'title' | 'url' | 'publishedAt' | 'summary' | 'category' | 'cover'
 > = {
 	name: 'investor-id',
 	displayName: 'Investor.id',
@@ -28,7 +29,6 @@ export const investorIdConfig: HtmlScraperConfig<
 	urlHomepage: 'https://investor.id',
 	engine: 'cheerio',
 	currency: '',
-	cover: "@src|body > main > div:nth-child(3) > div > div.col > div:nth-child(1) > div.col-4 > a > div > img",
 	url: 'https://investor.id/search/harga-emas',
 	active: true,
 	items: Array.from({ length: ARTICLE_COUNT }, (_, i) => makeArticleItem(i)),

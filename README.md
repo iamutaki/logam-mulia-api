@@ -62,6 +62,14 @@ Dokumentasi interaktif OpenAPI 3.0 (auto-generated via `@hono/zod-openapi`) ters
 | brankaslm | ✅ | [`/brankaslm`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/brankaslm) | [`/brankaslm/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/brankaslm/history) | ✅ |
 | pegadaian | ✅ | [`/pegadaian`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/pegadaian) | - | ❌ |
 
+## Endpoint News
+
+| Source | Status | Endpoint Terkini | Detail | Cached |
+| ------ | :----: | ---------------- | ------ | :----: |
+| investor-id | ✅ | [`/news/investor-id`](https://logam-mulia-api.iamutaki.workers.dev/api/news/investor-id) | [`/news/investor-id/detail?url=`](https://logam-mulia-api.iamutaki.workers.dev/api/news/investor-id/detail) | ❌ |
+
+### Format Response News
+
 ## Format Response
 
 ```json
@@ -89,6 +97,54 @@ Dokumentasi interaktif OpenAPI 3.0 (auto-generated via `@hono/zod-openapi`) ters
   "timestamp": "2026-05-16T05:06:58.888Z",
   "cached": true
 }
+```
+
+### Format Response News
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "title": "Harga Emas Hari Ini Naik",
+      "url": "https://investor.id/market/439371/...",
+      "publishedAt": "5 jam yang lalu",
+      "summary": "Harga emas dunia bergerak...",
+      "category": "Market",
+      "displayName": "Investor.id",
+      "logo": "https://investor.id/img/logo_investorid.webp"
+    }
+  ],
+  "source": "investor-id",
+  "timestamp": "2026-05-17T10:00:00.000Z"
+}
+```
+
+### Format Detail News
+
+```json
+{
+  "success": true,
+  "data": {
+    "title": "Harga Emas Hari Ini Naik",
+    "author": "Nama Penulis",
+    "publishedAt": "17 Mei 2026",
+    "content": "Isi berita lengkap...",
+    "cover": "https://img.com/foto.webp",
+    "tags": "#Harga Emas #emas"
+  },
+  "timestamp": "2026-05-17T10:00:00.000Z"
+}
+```
+
+```bash
+# Ambil berita terbaru
+curl -X GET "https://logam-mulia-api.iamutaki.workers.dev/api/news/investor-id"
+```
+
+```bash
+# Ambil detail berita (url dari response list)
+curl -X GET "https://logam-mulia-api.iamutaki.workers.dev/api/news/investor-id/detail?url=https://investor.id/market/439371/..."
 ```
 
 ## Contoh Penggunaan

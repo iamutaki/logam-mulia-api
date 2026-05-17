@@ -86,6 +86,7 @@ app.get('/', async (c) => {
 				publishedAt: cleanDate(raw.publishedAt),
 				summary: cleanText(raw.summary),
 				category: cleanText(raw.category),
+				cover: raw.cover ?? '',
 			}),
 			defaultScrapingOptions,
 		);
