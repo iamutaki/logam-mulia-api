@@ -34,12 +34,12 @@ export const investorIdConfig: HtmlScraperConfig<
 };
 
 export const investorIdDetailSelectors: NewsDetailSelectors = {
-	title: 'header h1',
-	author: '.article-author .author-name',
-	publishedAt: 'header .article-date, time.published-at',
-	content: '.article-body, .content, #article-content',
-	mainImage: '@src|.article-featured-image img, @src|header figure img',
-	imageCaption: '.article-featured-image figcaption',
-	tags: '.article-tags a, .tags a',
+	title: 'body > main > div > div.row > div.col > h1',
+	author: 'body > main > div > div.row > div.col > div.row.my-3 > div.col.small.pt-1 > b',
+	publishedAt: 'body > main > div > div.row > div.col > div.row.my-3 > div.col.small.pt-1 > span',
+	content: 'p|body > main > div > div.row > div.col > div.row.mt-3 > div',
+	mainImage: '@src|body > main > div > div.row > div.col > div.rounded-3.overflow-hidden.mb-2 > img',
+	imageCaption: '@alt|body > main > div > div.row > div.col > div.rounded-3.overflow-hidden.mb-2 > img',
+	tags: 'body > main > div > div.row > div.col > div.row.mt-3 > div > div:nth-child(35)',
 	relatedNews: '.related-news-item a',
 };

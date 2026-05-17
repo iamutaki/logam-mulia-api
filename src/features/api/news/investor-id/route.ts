@@ -25,7 +25,7 @@ function cleanDate(raw: string | undefined): string {
 function resolveUrl(raw: string | undefined, base: string): string {
 	if (!raw) return '';
 	if (raw.startsWith('http')) return raw;
-	return `${base.replace(/\/$/, '')}${raw}`;
+	return `${base.replace(/\/$/, '')}${raw}/all`;
 }
 
 function extractSelector($: cheerio.CheerioAPI, sel: string): string {
@@ -38,11 +38,42 @@ function extractSelector($: cheerio.CheerioAPI, sel: string): string {
 	return $(sel).text().trim();
 }
 
+function sanitizeContent(raw: string): string {
+	return raw
+		.replace(/\n\s*\ngoogletag\.[^\n]*\n\s*\n/g, '\n')
+		.replace(/\n\s*\.[\w-]+\s*\{[^}]*\}\s*\n/g, '\n')
+		.replace(/\n\s*ADVERTISEMENT\s*\n/gi, '\n')
+		.replace(/\n\s*Editor\s*:\s*[^\n]+\n/gi, '\n')
+		.replace(/\n\s*(?:#\S+\s*)+\n/g, '\n')
+		.replace(/\n{2,}Baca\s+Juga\s*:?.+?\n{2,}/gi, '\n')
+		.replace(/\n\s*(?:Follow|Baca\s+Berita|BAGIKAN).*?(?:\n\s*)+/gis, '\n')
+		.replace(/\n\s*URL\s+berhasil\s+di\s+salin\.\s*\n/gi, '\n')
+		.replace(/\n{3,}/g, '\n\n')
+		.trim();
+}
+
 function extractFirst($: cheerio.CheerioAPI, sel: string): string {
 	const parts = sel.split(',').map((s) => s.trim());
 	for (const part of parts) {
 		const val = extractSelector($, part);
 		if (val) return val;
+	}
+	return '';
+}
+
+function extractContent($: cheerio.CheerioAPI, sel: string): string {
+	const idx = sel.indexOf('|');
+	if (idx === -1) return extractFirst($, sel);
+	const tag = sel.slice(0, idx);
+	const css = sel.slice(idx + 1);
+	const parts = css.split(',').map((s) => s.trim());
+	for (const part of parts) {
+		const $container = $(part);
+		if ($container.length === 0) continue;
+		const items = $container.find(tag).map((_, el) => $(el).text().trim()).get();
+		if (items.length > 0) {
+			return items.join('\n\n');
+		}
 	}
 	return '';
 }
@@ -84,7 +115,7 @@ app.get('/detail', async (c) => {
 			title: cleanText(extractFirst($, investorIdDetailSelectors.title)),
 			author: cleanText(extractFirst($, investorIdDetailSelectors.author)),
 			publishedAt: cleanDate(extractFirst($, investorIdDetailSelectors.publishedAt)),
-			content: extractFirst($, investorIdDetailSelectors.content),
+			content: sanitizeContent(extractContent($, investorIdDetailSelectors.content)),
 			mainImage: investorIdDetailSelectors.mainImage
 				? extractFirst($, investorIdDetailSelectors.mainImage)
 				: undefined,
