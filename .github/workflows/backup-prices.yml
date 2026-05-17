@@ -1,0 +1,169 @@
+name: Backup Prices to CSV
+
+on:
+  schedule:
+    # 10:00 WIB (UTC+7) == 03:00 UTC
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: backup-prices
+  cancel-in-progress: true
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Fetch prices and append to CSV
+        id: fetch
+        run: |
+          set -uo pipefail
+
+          DATE=$(TZ='Asia/Jakarta' date +%Y-%m-%d)
+          CSV_DIR="backup/prices"
+          BASE_URL="https://logam-mulia-api.iamutaki.workers.dev/api/prices"
+          CSV_COLUMNS="source,material,materialType,weight,weightUnit,sellPrice,buybackPrice,currency,recordedDate,lineKey"
+
+          SOURCES=(
+            anekalogam bankbsi brankaslm cermati emasku galeri24
+            hargaemas-com hargaemas-net hargaemas-org hartadinataabadi
+            indogold kursdolar lakuemas logammulia pegadaian
+            sakumas sampoernagold treasury
+          )
+
+          mkdir -p "$CSV_DIR"
+
+          TOTAL=0
+          OK=0
+          SKIP=0
+          FAIL=0
+          FAILED_LIST=""
+
+          for source in "${SOURCES[@]}"; do
+            CSV_FILE="${CSV_DIR}/${source}.csv"
+            TOTAL=$((TOTAL + 1))
+
+            if [ ! -f "$CSV_FILE" ]; then
+              echo "$CSV_COLUMNS" > "$CSV_FILE"
+            fi
+
+            if grep -qF "$DATE" "$CSV_FILE" 2>/dev/null; then
+              echo "SKIP: ${source} already has data for ${DATE}"
+              SKIP=$((SKIP + 1))
+              continue
+            fi
+
+            echo ">>> Fetching: ${source}"
+            if ! response=$(curl -fSs --retry 3 --retry-delay 5 --retry-all-errors --max-time 60 "${BASE_URL}/${source}"); then
+              echo "FAILED: ${source} (curl error)"
+              FAIL=$((FAIL + 1))
+              FAILED_LIST="${FAILED_LIST}\n- ${source}"
+              continue
+            fi
+
+            success=$(echo "$response" | jq -r '.success // false')
+            count=$(echo "$response" | jq '.data | length')
+
+            if [ "$success" != "true" ] || [ "$count" -eq 0 ]; then
+              echo "SKIP: ${source} (no data)"
+              SKIP=$((SKIP + 1))
+              continue
+            fi
+
+            rows=$(echo "$response" | jq --arg date "$DATE" '[.data[] | select(.recordedDate == $date)] | length')
+
+            if [ "$rows" -eq 0 ]; then
+              echo "SKIP: ${source} (no rows for ${DATE})"
+              SKIP=$((SKIP + 1))
+              continue
+            fi
+
+            echo "$response" | jq -r --arg date "$DATE" '
+              .data[] | select(.recordedDate == $date) |
+              [.source, .material, .materialType, .weight, .weightUnit, .sellPrice, (.buybackPrice // ""), .currency, .recordedDate, .lineKey] | @csv
+            ' >> "$CSV_FILE"
+
+            echo "OK: ${source} (${rows} rows)"
+            OK=$((OK + 1))
+          done
+
+          {
+            echo "## Backup Summary"
+            echo ""
+            echo "- **Date**: ${DATE}"
+            echo "- **Total sources**: ${TOTAL}"
+            echo "- **Backed up**: ${OK}"
+            echo "- **Skipped**: ${SKIP}"
+            echo "- **Failed**: ${FAIL}"
+            if [ -n "$FAILED_LIST" ]; then
+              echo ""
+              echo "### Failed Sources"
+              printf "%b\n" "$FAILED_LIST"
+            fi
+          } >> "${GITHUB_STEP_SUMMARY}"
+
+          echo "date=${DATE}" >> "${GITHUB_OUTPUT}"
+          echo "ok=${OK}" >> "${GITHUB_OUTPUT}"
+          echo "fail=${FAIL}" >> "${GITHUB_OUTPUT}"
+
+      - name: Create PR and auto-merge
+        run: |
+          set -uo pipefail
+
+          if git diff --quiet; then
+            echo "No changes to commit — skipping PR"
+            {
+              echo ""
+              echo "> No new data to backup today."
+            } >> "${GITHUB_STEP_SUMMARY}"
+            exit 0
+          fi
+
+          DATE=$(TZ='Asia/Jakarta' date +%Y-%m-%d)
+          BRANCH="backup/prices-${DATE}"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git checkout -b "$BRANCH"
+          git add backup/prices/
+          git commit -m "chore: CSV price backup - ${DATE}"
+          git push origin "$BRANCH"
+
+          PR_URL=$(gh pr create \
+            --title "CSV Price Backup - ${DATE}" \
+            --body "$(cat <<BODY
+          ## CSV Price Backup — ${DATE}
+
+          Automated daily backup of price data from all sources.
+
+          ### CSV Columns
+          \`source\`, \`material\`, \`materialType\`, \`weight\`, \`weightUnit\`, \`sellPrice\`, \`buybackPrice\`, \`currency\`, \`recordedDate\`, \`lineKey\`
+
+          ### Files
+          - \`backup/prices/*.csv\`
+
+          ---
+          *This PR was created and auto-merged by [backup-prices](.github/workflows/backup-prices.yml) workflow.*
+          BODY
+          )" \
+            --base main)
+
+          echo "PR created: ${PR_URL}"
+          gh pr merge "$PR_URL" --merge --delete-branch
+
+          {
+            echo ""
+            echo "> PR auto-merged: ${PR_URL}"
+          } >> "${GITHUB_STEP_SUMMARY}"
+
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
