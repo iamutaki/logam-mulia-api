@@ -118,7 +118,7 @@ jobs:
         run: |
           set -uo pipefail
 
-          if git diff --quiet; then
+          if [ -z "$(git status --porcelain backup/prices/)" ]; then
             echo "No changes to commit — skipping PR"
             {
               echo ""
