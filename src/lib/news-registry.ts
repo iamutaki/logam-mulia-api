@@ -8,6 +8,7 @@ export interface NewsFeatureRegistration {
 	displayName?: string;
 	logo?: string;
 	favicon?: string | null;
+	cover?: string | null;
 	urlHomepage?: string;
 	route: Hono<{ Bindings: Bindings }>;
 	cached: boolean;
@@ -18,6 +19,7 @@ export interface NewsSourceInfo {
 	displayName?: string;
 	logo?: string;
 	favicon?: string | null;
+	cover?: string | null;
 	url: string;
 	urlHomepage?: string;
 }
@@ -41,13 +43,13 @@ export function registerNewsFeatures(
 
 	app.openapi(listRoute, (c) => {
 		return c.json({ data: newsModules.map((mod) => {
-			const { name, displayName, logo, favicon, urlHomepage } = mod.register();
-			return { name, displayName, logo, favicon, url: `/api/news/${name}`, urlHomepage };
+			const { name, displayName, logo, favicon, cover, urlHomepage } = mod.register();
+			return { name, displayName, logo, favicon, cover, url: `/api/news/${name}`, urlHomepage };
 		}) });
 	});
 
 	return newsModules.map((mod) => {
-		const { name, displayName, logo, favicon, urlHomepage, route } = mod.register();
+		const { name, displayName, logo, favicon, cover, urlHomepage, route } = mod.register();
 		const sourceUrl = `/api/news/${name}`;
 
 		app.openAPIRegistry.registerPath({ ...sourceRoute, path: sourceUrl });
@@ -57,7 +59,7 @@ export function registerNewsFeatures(
 			try {
 				const clone = c.res.clone();
 				const json = (await clone.json()) as Record<string, unknown>;
-				const meta = { url: sourceUrl, displayName, logo, favicon, urlHomepage };
+				const meta = { url: sourceUrl, displayName, logo, favicon, cover, urlHomepage };
 
 				if (Array.isArray(json.data)) {
 					json.data = (json.data as Record<string, unknown>[]).map(
@@ -74,6 +76,6 @@ export function registerNewsFeatures(
 		});
 		app.route(sourceUrl, route);
 
-		return { name, displayName, logo, favicon, url: sourceUrl, urlHomepage };
+		return { name, displayName, logo, favicon, cover, url: sourceUrl, urlHomepage };
 	});
 }

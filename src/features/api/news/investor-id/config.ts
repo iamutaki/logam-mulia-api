@@ -1,6 +1,6 @@
 import type { HtmlScraperConfig, NewsDetailSelectors } from '../../../../lib/types';
 
-const ARTICLE_COUNT = 10;
+const ARTICLE_COUNT = 20;
 
 const resultsBlock = 'main > div:nth-child(3) > div.row > div.col';
 
@@ -28,6 +28,7 @@ export const investorIdConfig: HtmlScraperConfig<
 	urlHomepage: 'https://investor.id',
 	engine: 'cheerio',
 	currency: '',
+	cover: "@src|body > main > div:nth-child(3) > div > div.col > div:nth-child(1) > div.col-4 > a > div > img",
 	url: 'https://investor.id/search/harga-emas',
 	active: true,
 	items: Array.from({ length: ARTICLE_COUNT }, (_, i) => makeArticleItem(i)),
@@ -38,7 +39,7 @@ export const investorIdDetailSelectors: NewsDetailSelectors = {
 	author: 'body > main > div > div.row > div.col > div.row.my-3 > div.col.small.pt-1 > b',
 	publishedAt: 'body > main > div > div.row > div.col > div.row.my-3 > div.col.small.pt-1 > span',
 	content: 'p|body > main > div > div.row > div.col > div.row.mt-3 > div',
-	mainImage: '@src|body > main > div > div.row > div.col > div.rounded-3.overflow-hidden.mb-2 > img',
+	cover: '@src|body > main > div > div.row > div.col > div.rounded-3.overflow-hidden.mb-2 > img',
 	imageCaption: '@alt|body > main > div > div.row > div.col > div.rounded-3.overflow-hidden.mb-2 > img',
 	tags: 'body > main > div > div.row > div.col > div.row.mt-3 > div > div:nth-child(35)',
 	relatedNews: '.related-news-item a',

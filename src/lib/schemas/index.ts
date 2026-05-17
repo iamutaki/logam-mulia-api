@@ -15,6 +15,7 @@ export const priceItemSchema = z.object({
 	displayName: z.string().optional().openapi({ example: 'Aneka Logam' }),
 	logo: z.string().optional().openapi({ example: '' }),
 	favicon: z.string().nullable().optional().openapi({ example: null }),
+	cover: z.string().nullable().optional().openapi({ example: null }),
 	urlHomepage: z.string().optional().openapi({ example: 'https://www.anekalogam.co.id' }),
 }).openapi('PriceItem');
 
@@ -39,6 +40,7 @@ export const sourceInfoSchema = z.object({
 	displayName: z.string().optional().openapi({ example: 'Aneka Logam' }),
 	logo: z.string().optional(),
 	favicon: z.string().nullable().optional(),
+	cover: z.string().nullable().optional(),
 	url: z.string().openapi({ example: '/api/prices/anekalogam' }),
 	urlHomepage: z.string().optional().openapi({ example: 'https://www.anekalogam.co.id' }),
 }).openapi('SourceInfo');
@@ -59,6 +61,7 @@ export const historyItemSchema = z.object({
 	displayName: z.string().optional().openapi({ example: 'Aneka Logam' }),
 	logo: z.string().optional().openapi({ example: '' }),
 	favicon: z.string().nullable().optional().openapi({ example: null }),
+	cover: z.string().nullable().optional().openapi({ example: null }),
 	urlHomepage: z.string().optional().openapi({ example: 'https://www.anekalogam.co.id' }),
 }).openapi('HistoryItem');
 
@@ -86,6 +89,7 @@ export const newsItemSchema = z.object({
 	displayName: z.string().optional().openapi({ example: 'Detik Finance' }),
 	logo: z.string().optional(),
 	favicon: z.string().nullable().optional(),
+	cover: z.string().nullable().optional(),
 	urlHomepage: z.string().optional(),
 }).openapi('NewsItem');
 

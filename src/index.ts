@@ -50,6 +50,7 @@ app.get('/api/prices/:source/history', async (c) => {
 		displayName: info?.displayName,
 		logo: info?.logo,
 		favicon: info?.favicon ?? null,
+		cover: info?.cover ?? null,
 		urlHomepage: info?.urlHomepage,
 	};
 

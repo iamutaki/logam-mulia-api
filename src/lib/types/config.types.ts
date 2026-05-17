@@ -18,6 +18,7 @@ export interface HtmlScraperConfig<T extends string = string> {
 	displayName?: string;
 	logo?: string;
 	favicon?: string | null;
+	cover?: string | null;
 	urlHomepage?: string;
 	url: string;
 	engine: 'cheerio';
@@ -77,7 +78,7 @@ export interface NewsDetailSelectors {
 	author: string;
 	publishedAt: string;
 	content: string;
-	mainImage?: string;
+	cover?: string;
 	imageCaption?: string;
 	updatedAt?: string;
 	tags?: string;

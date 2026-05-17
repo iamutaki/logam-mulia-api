@@ -116,8 +116,8 @@ app.get('/detail', async (c) => {
 			author: cleanText(extractFirst($, investorIdDetailSelectors.author)),
 			publishedAt: cleanDate(extractFirst($, investorIdDetailSelectors.publishedAt)),
 			content: sanitizeContent(extractContent($, investorIdDetailSelectors.content)),
-			mainImage: investorIdDetailSelectors.mainImage
-				? extractFirst($, investorIdDetailSelectors.mainImage)
+			cover: investorIdDetailSelectors.cover
+				? extractFirst($, investorIdDetailSelectors.cover)
 				: undefined,
 			imageCaption: investorIdDetailSelectors.imageCaption
 				? cleanText(extractFirst($, investorIdDetailSelectors.imageCaption))
