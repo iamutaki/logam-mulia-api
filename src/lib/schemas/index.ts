@@ -53,6 +53,10 @@ export const historyItemSchema = z.object({
 	recordedDate: z.string(),
 	createdAt: z.string(),
 	lineKey: z.string(),
+	url: z.string().optional().openapi({ example: '/api/prices/anekalogam' }),
+	displayName: z.string().optional().openapi({ example: 'Aneka Logam' }),
+	logo: z.string().optional().openapi({ example: '' }),
+	urlHomepage: z.string().optional().openapi({ example: 'https://www.anekalogam.co.id' }),
 }).openapi('HistoryItem');
 
 export const historyPaginationSchema = z.object({

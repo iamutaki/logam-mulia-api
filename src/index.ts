@@ -20,6 +20,8 @@ app.openapi(listSourcesRoute, (c) => {
 
 const SUPPORTED_SOURCES = new Set(SOURCES.map((s) => s.name));
 
+const sourceByName = new Map(SOURCES.map((s) => [s.name, s]));
+
 app.get('/api/prices/:source/history', async (c) => {
 	const source = c.req.param('source');
 	if (!SUPPORTED_SOURCES.has(source)) {
@@ -39,7 +41,18 @@ app.get('/api/prices/:source/history', async (c) => {
 		return c.json(createErrorResponse(result.error ?? 'Unknown error'), statusCode);
 	}
 
-	return c.json(result);
+	const info = sourceByName.get(source);
+	const meta = {
+		url: info?.url ?? `/api/prices/${source}`,
+		displayName: info?.displayName,
+		logo: info?.logo,
+		urlHomepage: info?.urlHomepage,
+	};
+
+	return c.json({
+		...result,
+		data: result.data?.map((item) => ({ ...item, ...meta })),
+	});
 });
 
 app.openAPIRegistry.registerPath(historyRoute);
