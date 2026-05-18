@@ -26,6 +26,7 @@ jobs:
         id: fetch
         run: |
           set -uo pipefail
+          trap 'rm -f "${CSV_DIR}"/*.tmp 2>/dev/null' EXIT
 
           DATE=$(TZ='Asia/Jakarta' date +%Y-%m-%d)
           CSV_DIR="backup/prices"
@@ -55,10 +56,9 @@ jobs:
               echo "$CSV_COLUMNS" > "$CSV_FILE"
             fi
 
-            if grep -qF "$DATE" "$CSV_FILE" 2>/dev/null; then
-              echo "SKIP: ${source} already has data for ${DATE}"
-              SKIP=$((SKIP + 1))
-              continue
+            if awk -F',' '$9 == "'"$DATE"'"' "$CSV_FILE" | grep -q .; then
+              echo "REPLACE: ${source} has existing data for ${DATE}, removing old rows"
+              awk -F',' '$9 != "'"$DATE"'"' "$CSV_FILE" > "${CSV_FILE}.tmp" && mv "${CSV_FILE}.tmp" "$CSV_FILE"
             fi
 
             echo ">>> Fetching: ${source}"
