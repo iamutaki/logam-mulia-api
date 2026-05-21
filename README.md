@@ -57,10 +57,10 @@ Dokumentasi interaktif OpenAPI 3.0 (auto-generated via `@hono/zod-openapi`) ters
 | emasku | ✅ | [`/emasku`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/emasku) | [`/emasku/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/emasku/history) | ✅ |
 | hartadinataabadi | ✅ | [`/hartadinataabadi`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hartadinataabadi) | [`/hartadinataabadi/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hartadinataabadi/history) | ✅ |
 | galeri24 | ✅ | [`/galeri24`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/galeri24) | [`/galeri24/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/galeri24/history) | ✅ |
-| sampoernagold | ✅ | [`/sampoernagold`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/sampoernagold) | - | ❌ |
+| sampoernagold | ✅ | [`/sampoernagold`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/sampoernagold) | [`/sampoernagold/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/sampoernagold/history) | ✅ |
 | bankbsi | ✅ | [`/bankbsi`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/bankbsi) | [`/bankbsi/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/bankbsi/history) | ✅ |
 | brankaslm | ✅ | [`/brankaslm`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/brankaslm) | [`/brankaslm/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/brankaslm/history) | ✅ |
-| pegadaian | ✅ | [`/pegadaian`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/pegadaian) | - | ❌ |
+| pegadaian | ✅ | [`/pegadaian`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/pegadaian) | [`/pegadaian/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/pegadaian/history) | ✅ |
 
 ## Endpoint News
 

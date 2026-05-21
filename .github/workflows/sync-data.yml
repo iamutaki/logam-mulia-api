@@ -56,7 +56,9 @@ jobs:
           hit "https://logam-mulia-api.iamutaki.workers.dev/api/prices/kursdolar?refresh=true" "kursdolar"
           hit "https://logam-mulia-api.iamutaki.workers.dev/api/prices/lakuemas?refresh=true" "lakuemas"
           hit "https://logam-mulia-api.iamutaki.workers.dev/api/prices/logammulia?refresh=true" "logammulia"
+          hit "https://logam-mulia-api.iamutaki.workers.dev/api/prices/pegadaian?refresh=true" "pegadaian"
           hit "https://logam-mulia-api.iamutaki.workers.dev/api/prices/sakumas?refresh=true" "sakumas"
+          hit "https://logam-mulia-api.iamutaki.workers.dev/api/prices/sampoernagold?refresh=true" "sampoernagold"
           hit "https://logam-mulia-api.iamutaki.workers.dev/api/prices/treasury?refresh=true" "treasury"
 
           SUCCESS=$((TOTAL - FAILED))
