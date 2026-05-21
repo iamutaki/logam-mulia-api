@@ -52,7 +52,7 @@ Dokumentasi interaktif OpenAPI 3.0 (auto-generated via `@hono/zod-openapi`) ters
 | indogold | ✅ | [`/indogold`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/indogold) | [`/indogold/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/indogold/history) | ✅ |
 | hargaemas-net | ✅ | [`/hargaemas-net`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-net) | [`/hargaemas-net/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-net/history) | ✅ |
 | hargaemas-com | ✅ | [`/hargaemas-com`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-com) | [`/hargaemas-com/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-com/history) | ✅ |
-| treasury | ✅ | [`/treasury`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/treasury) | - | ❌ |
+| treasury | ✅ | [`/treasury`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/treasury) | [`/treasury/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/treasury/history) | ✅ |
 | logammulia | ✅ | [`/logammulia`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/logammulia) | [`/logammulia/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/logammulia/history) | ✅ |
 | emasku | ✅ | [`/emasku`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/emasku) | [`/emasku/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/emasku/history) | ✅ |
 | hartadinataabadi | ✅ | [`/hartadinataabadi`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hartadinataabadi) | [`/hartadinataabadi/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hartadinataabadi/history) | ✅ |

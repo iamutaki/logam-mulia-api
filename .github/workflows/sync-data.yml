@@ -57,6 +57,7 @@ jobs:
           hit "https://logam-mulia-api.iamutaki.workers.dev/api/prices/lakuemas?refresh=true" "lakuemas"
           hit "https://logam-mulia-api.iamutaki.workers.dev/api/prices/logammulia?refresh=true" "logammulia"
           hit "https://logam-mulia-api.iamutaki.workers.dev/api/prices/sakumas?refresh=true" "sakumas"
+          hit "https://logam-mulia-api.iamutaki.workers.dev/api/prices/treasury?refresh=true" "treasury"
 
           SUCCESS=$((TOTAL - FAILED))
           {
