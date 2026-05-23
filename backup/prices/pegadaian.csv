@@ -1,2 +1,3 @@
 source,material,materialType,weight,weightUnit,sellPrice,buybackPrice,currency,recordedDate,lineKey
 "pegadaian","gold","unknown",0.01,"gram",27010,25920,"IDR","2026-05-22",""
+"pegadaian","gold","unknown",0.01,"gram",26920,25840,"IDR","2026-05-23",""
