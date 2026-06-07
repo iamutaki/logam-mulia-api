@@ -15,3 +15,4 @@ source,material,materialType,weight,weightUnit,sellPrice,buybackPrice,currency,r
 "treasury","gold","unknown",1,"gram",2611264,2524943,"IDR","2026-06-04",""
 "treasury","gold","unknown",1,"gram",2600743,2514873,"IDR","2026-06-05",""
 "treasury","gold","unknown",1,"gram",2564648,2477434,"IDR","2026-06-06",""
+"treasury","gold","unknown",1,"gram",2564648,2477434,"IDR","2026-06-07",""
