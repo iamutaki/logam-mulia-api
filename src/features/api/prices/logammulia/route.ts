@@ -1,28 +1,16 @@
 import { Hono } from 'hono';
 import type { Bindings } from '../../../../types';
-import { CheerioScraper, createErrorResponse, defaultScrapingOptions, parseCurrency } from '../../../../lib';
+import { createErrorResponse, defaultScrapingOptions } from '../../../../lib';
 import { fetchOrCache } from '../../../../lib/services/price-service';
 import { logammuliaConfig } from './config';
+import { scrapeLogamMuliaForFetchOrCache } from './scrape';
 
 const app = new Hono<{ Bindings: Bindings }>();
 
-const scraper = new CheerioScraper('logammulia', logammuliaConfig);
-
 app.get('/', async (c) => {
 	const refresh = c.req.query('refresh') === 'true';
-	const result = await fetchOrCache(c.env, 'logammulia', { refresh }, () =>
-		scraper.scrape(
-			(raw) => ({
-				lineKey: raw.lineKey ?? '',
-				material: raw.material || 'gold',
-				materialType: raw.materialType || 'unknown',
-				buybackPrice: parseCurrency(raw.buybackPrice),
-				sellPrice: parseCurrency(raw.sellPrice),
-				weight: raw.weight ? Number(raw.weight) : 1,
-				weightUnit: raw.weightUnit || 'gr',
-			}),
-			defaultScrapingOptions,
-		),
+	const result = await fetchOrCache(c.env, logammuliaConfig.name, { refresh }, () =>
+		scrapeLogamMuliaForFetchOrCache(c.env, defaultScrapingOptions),
 	);
 
 	if (!result.success) {
