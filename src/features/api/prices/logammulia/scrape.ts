@@ -1,133 +1,95 @@
-import type { ScrapingOptions } from '../../../../lib/types/scraper.types';
+import type { Bindings } from '../../../../types';
+import { parseCurrency } from '../../../../lib/utils/currency';
 import { JinaScraper } from '../../../../lib/scrapers/jina-scraper';
+import type { ScrapingOptions } from '../../../../lib/types/scraper.types';
+import { logammuliaConfig } from './config';
 
-const LOGAMMULIA_URL = 'https://www.logammulia.com/id/harga-emas-hari-ini';
+const HEADER_RE = /Berat.*Harga Dasar/i;
+const SEPARATOR_RE = /^\|[\s\-:|]+\|$/;
+const SECTION_RE = /^\|\s*([A-Za-z][\w ]*?)\s*\|$/;
+const ROW_RE = /^\|\s*([\d.]+)\s*gr\s*\|\s*([\d,]+)\s+\|\s*([\d,]+)/i;
 
-interface LogamMuliaItem {
-	lineKey: string;
+export type LogamMuliaRow = {
 	material: string;
 	materialType: string;
-	buybackPrice: number;
-	sellPrice: number;
 	weight: number;
 	weightUnit: string;
+	sellPrice: number;
+	buybackPrice: number | null;
 }
 
-/**
- * Parse Jina Reader markdown tables from logammulia.com.
- *
- * Jina converts <table> to markdown pipes:
- *   | Berat | Harga Dasar | Harga (+Pajak PPh 0.25%) |
- *   | --- | --- | --- |
- *   | Emas Batangan |
- *   | 0.5 gr | 1,365,000 | 1,368,413 |
- */
-function parseLogamMuliaMarkdown(markdown: string): LogamMuliaItem[] {
+export function parseLogamMuliaTable(markdown: string): LogamMuliaRow[] {
 	const lines = markdown.split('\n');
-	const items: LogamMuliaItem[] = [];
-	let currentSection = '';
-	let lineKeyCounter = 0;
+	let inTable = false;
+	let section = '';
+	const rows: LogamMuliaRow[] = [];
 
 	for (const line of lines) {
-		const trimmed = line.trim();
-		if (!trimmed.startsWith('|')) continue;
-
-		const cells = trimmed
-			.split('|')
-			.map((c) => c.trim())
-			.filter(Boolean);
-
-		// Skip separator rows (---|---|---)
-		if (cells.some((c) => /^-+$/.test(c))) continue;
-
-		// Skip column-header rows
-		const headerHints = ['berat', 'harga', 'beli', 'jual', 'dasar'];
-		if (cells.length >= 2 && cells.some((c) => headerHints.includes(c.toLowerCase()))) {
+		if (!inTable) {
+			if (HEADER_RE.test(line)) inTable = true;
 			continue;
 		}
 
-		// Section header — 1–2 cells, non-numeric, not a weight value
-		if (cells.length <= 2) {
-			const maybeSection = cells[0] || '';
-			if (maybeSection && !/^[\d.,]+\s*gr?$/i.test(maybeSection)) {
-				currentSection = maybeSection;
-			}
+		if (SEPARATOR_RE.test(line)) continue;
+
+		const sec = line.match(SECTION_RE);
+		if (sec) {
+			section = sec[1].trim();
 			continue;
 		}
 
-		// Data row: | weight | sell_price | with_pajak |
-		const weightCell = cells[0]?.trim() || '';
-		const sellPriceCell = cells[1]?.trim() || '';
-		const weightMatch = weightCell.match(/^([\d.]+)\s*gr?$/i);
-		if (!weightMatch || !sellPriceCell) continue;
+		const m = line.match(ROW_RE);
+		if (m) {
+			const lower = section.toLowerCase();
+			// Skip non-gold/silver tables (Liontin, etc.)
+			if (!lower.includes('emas') && !lower.includes('perak') && !lower.includes('batangan')) continue;
 
-		const weight = parseFloat(weightMatch[1].replace(',', '.'));
-		const sellPrice = parseInt(sellPriceCell.replace(/,/g, ''), 10);
-		if (!isFinite(weight) || !isFinite(sellPrice)) continue;
-
-		// Skip non-gold/silver tables (e.g. Liontin)
-		const lower = currentSection.toLowerCase();
-		if (!lower.includes('emas') && !lower.includes('perak') && !lower.includes('batangan')) {
-			continue;
+			rows.push({
+				material: lower.includes('perak') ? 'silver' : 'gold',
+				materialType: section,
+				weight: parseCurrency(m[1]),
+				weightUnit: 'gr',
+				sellPrice: parseCurrency(m[2]),
+				buybackPrice: null,
+			});
 		}
-
-		lineKeyCounter++;
-		items.push({
-			lineKey: `logammulia-jina-${lineKeyCounter}`,
-			material: lower.includes('perak') ? 'silver' : 'gold',
-			materialType: currentSection,
-			buybackPrice: 0,
-			sellPrice,
-			weight,
-			weightUnit: 'gr',
-		});
 	}
 
-	return items;
+	return rows;
 }
 
-export async function scrapeLogamMuliaForFetchOrCache(
-	env: { JINA_API_KEY?: string },
-	options?: ScrapingOptions,
-): Promise<{
+export type LogamMuliaFetchOrCacheScrapeResult = {
 	success: boolean;
-	data?: LogamMuliaItem[];
+	data?: unknown;
 	error?: string;
 	timestamp: string;
 	source: string;
 	currency?: string;
-}> {
+	inactive?: boolean;
+};
+
+export async function scrapeLogamMuliaForFetchOrCache(
+	env: Bindings,
+	options?: ScrapingOptions,
+): Promise<LogamMuliaFetchOrCacheScrapeResult> {
 	const timestamp = new Date().toISOString();
+
+	if (!logammuliaConfig.active) {
+		return { success: false, error: 'inactive', timestamp, source: logammuliaConfig.name, currency: logammuliaConfig.currency, inactive: true };
+	}
 
 	try {
 		const scraper = new JinaScraper(env.JINA_API_KEY);
-		const { text } = await scraper.fetch(LOGAMMULIA_URL, options);
-		const items = parseLogamMuliaMarkdown(text);
+		const { text } = await scraper.fetch(logammuliaConfig.url, options);
+		const rows = parseLogamMuliaTable(text);
 
-		if (items.length === 0) {
-			return {
-				success: false,
-				error: 'No prices found in Jina page content',
-				timestamp,
-				source: 'logammulia',
-				currency: 'IDR',
-			};
+		if (rows.length === 0) {
+			return { success: false, error: 'No prices found in page content', timestamp, source: logammuliaConfig.name, currency: logammuliaConfig.currency };
 		}
 
-		return {
-			success: true,
-			data: items,
-			timestamp,
-			source: 'logammulia',
-			currency: 'IDR',
-		};
+		return { success: true, data: rows, timestamp, source: logammuliaConfig.name, currency: logammuliaConfig.currency };
 	} catch (error) {
-		return {
-			success: false,
-			error: error instanceof Error ? error.message : 'Unknown error',
-			timestamp,
-			source: 'logammulia',
-			currency: 'IDR',
-		};
+		const message = error instanceof Error ? error.message : 'Unknown error';
+		return { success: false, error: message, timestamp, source: logammuliaConfig.name, currency: logammuliaConfig.currency };
 	}
 }
