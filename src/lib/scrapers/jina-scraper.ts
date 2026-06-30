@@ -24,12 +24,11 @@ export class JinaScraper {
 
       try {
         const headers: Record<string, string> = {
-          ...(options?.headers ?? {}),
           Accept: 'text/markdown',
+          ...(options?.headers ?? {}),
         };
-        // Strip Accept-Encoding — Jina returns binary gzip if client advertises
-        // it, but without a proper Content-Encoding header, so the runtime can't
-        // auto-decompress.
+        // Strip Accept-Encoding — Jina returns binary gzip if client advertises it, but without a proper Content-Encoding header, so the runtime can't auto-decompress.
+        // Without Accept-Encoding, Jina returns plain text with Content-Encoding absent → Workers runtime reads it as-is = correct markdown.
         delete headers['Accept-Encoding'];
         delete headers['accept-encoding'];
 
