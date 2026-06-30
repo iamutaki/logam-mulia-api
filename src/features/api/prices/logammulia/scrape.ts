@@ -9,7 +9,7 @@ const SEPARATOR_RE = /^\|[\s\-:|]+\|$/;
 const SECTION_RE = /^\|\s*([A-Za-z][\w ]*?)\s*\|$/;
 const ROW_RE = /^\|\s*([\d.]+)\s*gr\s*\|\s*([\d,]+)\s+\|\s*([\d,]+)/i;
 
-export interface LogamMuliaRow {
+export type LogamMuliaRow = {
 	material: string;
 	materialType: string;
 	weight: number;
@@ -18,7 +18,7 @@ export interface LogamMuliaRow {
 	buybackPrice: number | null;
 }
 
-function parseLogamMuliaTable(markdown: string): LogamMuliaRow[] {
+export function parseLogamMuliaTable(markdown: string): LogamMuliaRow[] {
 	const lines = markdown.split('\n');
 	let inTable = false;
 	let section = '';
