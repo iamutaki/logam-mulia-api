@@ -82,6 +82,7 @@ export const logammuliaConfig: ScrapingConfig<
 	logo: '',
 	urlHomepage: 'https://www.logammulia.com',
 	engine: 'cheerio',
+	proxy: 'jina',
 	currency: 'IDR',
 	url: 'https://www.logammulia.com/harga-emas-hari-ini',
 	active: true,

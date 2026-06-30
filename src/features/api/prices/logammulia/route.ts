@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import type { Bindings } from '../../../../types';
-import { CheerioScraper, createErrorResponse, defaultScrapingOptions, parseCurrency } from '../../../../lib';
+import { CheerioScraper, createErrorResponse, parseCurrency } from '../../../../lib';
 import { fetchOrCache } from '../../../../lib/services/price-service';
 import { logammuliaConfig } from './config';
 
@@ -21,7 +21,16 @@ app.get('/', async (c) => {
 				weight: raw.weight ? Number(raw.weight) : 1,
 				weightUnit: raw.weightUnit || 'gr',
 			}),
-			defaultScrapingOptions,
+			// proxy:'jina' makes fetchHtml hit r.jina.ai/<url>; X-Return-Format:html returns the
+			// original DOM so the existing cheerio selectors resolve unchanged.
+			{
+				headers: {
+					'X-Return-Format': 'html',
+					...(c.env.JINA_API_KEY ? { Authorization: `Bearer ${c.env.JINA_API_KEY}` } : {}),
+				},
+				timeout: 15000,
+				retries: 2,
+			},
 		),
 	);
 

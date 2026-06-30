@@ -22,6 +22,8 @@ export interface HtmlScraperConfig<T extends string = string> {
 	urlHomepage?: string;
 	url: string;
 	engine: 'cheerio';
+	/** When set, fetch via Jina Reader (bypasses Akamai bot blocking on the target). */
+	proxy?: 'jina';
 	currency?: string;
 	active?: boolean;
 	cached?: boolean;

@@ -1,6 +1,6 @@
 import type { ScrapingOptions } from '../types/scraper.types';
 
-const JINA_BASE_URL = 'https://r.jina.ai/';
+export const JINA_BASE_URL = 'https://r.jina.ai/';
 
 export class JinaScraper {
   private apiKey?: string;

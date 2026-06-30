@@ -1,4 +1,5 @@
 import * as cheerio from 'cheerio';
+import { JINA_BASE_URL } from './jina-scraper';
 import type { ApiResponse } from '../types/api.types';
 import type { HtmlScraperConfig } from '../types/config.types';
 import type {
@@ -30,7 +31,10 @@ export class HtmlScraper<T extends Record<string, string> = Record<string, strin
 			const timeoutId = setTimeout(() => controller.abort(), options?.timeout ?? 10000);
 
 			try {
-				const response = await fetch(url, {
+				// Akamai-protected sources (config.proxy='jina') fetch via Jina Reader to bypass
+				// the 403 Cloudflare Worker egress IPs / TLS fingerprints get from Akamai Bot Manager.
+				const targetUrl = this.config.proxy === 'jina' ? `${JINA_BASE_URL}${url}` : url;
+				const response = await fetch(targetUrl, {
 					signal: controller.signal,
 					headers: options?.headers,
 				});
