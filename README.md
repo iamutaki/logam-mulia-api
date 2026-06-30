@@ -5,8 +5,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers-F38020?logo=cloudflare&logoColor=white)](https://workers.cloudflare.com/)
 [![Hono](https://img.shields.io/badge/Hono-Framework-E36002?logo=hono&logoColor=white)](https://hono.dev/)
-[![Issues](https://img.shields.io/github/issues/cacing69/logam-mulia-api)](https://github.com/cacing69/logam-mulia-api/issues)
-[![Stars](https://img.shields.io/github/stars/cacing69/logam-mulia-api?style=social)](https://github.com/cacing69/logam-mulia-api/stargazers)
+[![Issues](https://img.shields.io/github/issues/iamutaki/logam-mulia-api)](https://github.com/iamutaki/logam-mulia-api/issues)
+[![Stars](https://img.shields.io/github/stars/iamutaki/logam-mulia-api?style=social)](https://github.com/iamutaki/logam-mulia-api/stargazers)
 
 ---
 
@@ -18,13 +18,13 @@
 
 Repository ini berpartisipasi dalam [GitAds](https://gitads.dev/) - iklan sponsor ditampilkan melalui _badge_ di bawah (bukan konten dalam kode API).
 
-[![Sponsored by GitAds](https://gitads.dev/v1/ad-serve?source=cacing69/logam-mulia-api@github)](https://gitads.dev/v1/ad-track?source=cacing69/logam-mulia-api@github)
+[![Sponsored by GitAds](https://gitads.dev/v1/ad-serve?source=iamutaki/logam-mulia-api@github)](https://gitads.dev/v1/ad-track?source=iamutaki/logam-mulia-api@github)
 
 ## Showcase
 
 Berikut beberapa aplikasi dan website yang menggunakan API ini:
 
-- **[Radar Emas](https://github.com/cacing69/radar-emas)** ![Android](https://img.shields.io/badge/Android-3DDC84?logo=android&logoColor=white) - Aplikasi Android untuk memantau harga emas secara _real-time_.
+- **[Radar Emas](https://github.com/iamutaki/radar-emas)** ![Android](https://img.shields.io/badge/Android-3DDC84?logo=android&logoColor=white) - Aplikasi Android untuk memantau harga emas secara _real-time_.
 
 > Menggunakan API ini di project kamu? Silakan tambahkan melalui _pull request_ atau buat issue!
 
@@ -209,7 +209,7 @@ curl -X GET "https://logam-mulia-api.iamutaki.workers.dev/api/prices/galeri24/hi
 Kami punya daftar panjang website yang **akan diintegrasikan** ke dalam API ini. Daftar lengkapnya beserta status pengerjaan dapat dilihat di sini:
 
 - **[`waiting-list.md`](./waiting-list.md)** - daftar antrean sumber data berikutnya beserta status (`[x]` selesai, `[ ]` belum dikerjakan).
-- Punya referensi sumber baru? Tambahkan komentar di issue: [List of websites that can be scraped for data #10](https://github.com/cacing69/logam-mulia-api/issues/10).
+- Punya referensi sumber baru? Tambahkan komentar di issue: [List of websites that can be scraped for data #10](https://github.com/iamutaki/logam-mulia-api/issues/10).
 
 ## Migrasi dari Vercel ke Cloudflare Worker
 
@@ -232,7 +232,7 @@ Kontribusi dalam bentuk apa pun sangat kami hargai! Anda dapat membantu dengan c
 
 1. Memberi _star_ pada repository ini.
 2. Menambahkan sumber baru dari [`waiting-list.md`](./waiting-list.md) - tinggal pilih item yang masih `[ ]`, lalu kirim _pull request_.
-3. Melaporkan _bug_ atau memberi saran melalui [Issues](https://github.com/cacing69/logam-mulia-api/issues).
+3. Melaporkan _bug_ atau memberi saran melalui [Issues](https://github.com/iamutaki/logam-mulia-api/issues).
 4. Memperbaiki dokumentasi atau contoh penggunaan.
 
 Sebelum mengirim PR, mohon pastikan kode lulus _test_ lokal (`npm run test`) dan ikuti _style_ yang sudah ada di repo. Terima kasih banyak atas waktu dan kontribusi Anda - proyek ini berkembang berkat dukungan komunitas!
