@@ -24,9 +24,14 @@ export class JinaScraper {
 
       try {
         const headers: Record<string, string> = {
-          Accept: 'text/markdown',
           ...(options?.headers ?? {}),
+          Accept: 'text/markdown',
         };
+        // Strip Accept-Encoding — Jina returns binary gzip if client advertises
+        // it, but without a proper Content-Encoding header, so the runtime can't
+        // auto-decompress.
+        delete headers['Accept-Encoding'];
+        delete headers['accept-encoding'];
 
         if (this.apiKey) {
           headers['Authorization'] = `Bearer ${this.apiKey}`;
