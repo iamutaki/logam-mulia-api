@@ -136,11 +136,16 @@ jobs:
           git checkout -b "$BRANCH"
           git add backup/prices/
           git commit -m "chore: CSV price backup - ${DATE}"
-          git push origin "$BRANCH"
+          # Force push: a prior run (re-run / manual trigger) may have left this dated branch
+          # on the remote. The CSV layer is already date-idempotent, so overwriting is safe.
+          git push --force origin "$BRANCH"
 
-          PR_URL=$(gh pr create \
-            --title "CSV Price Backup - ${DATE}" \
-            --body "$(cat <<BODY
+          # Reuse an open PR for this branch if a prior run already created one, else create it.
+          PR_URL=$(gh pr list --head "$BRANCH" --base main --state open --json url --jq '.[0].url' || true)
+          if [ -z "$PR_URL" ]; then
+            PR_URL=$(gh pr create \
+              --title "CSV Price Backup - ${DATE}" \
+              --body "$(cat <<BODY
           ## CSV Price Backup — ${DATE}
 
           Automated daily backup of price data from all sources.
@@ -154,11 +159,35 @@ jobs:
           ---
           *This PR was created and auto-merged by [backup-prices](.github/workflows/backup-prices.yml) workflow.*
           BODY
-          )" \
-            --base main)
+              )" \
+              --base main)
+            echo "PR created: ${PR_URL}"
+          else
+            echo "PR already open, reusing: ${PR_URL}"
+          fi
 
-          echo "PR created: ${PR_URL}"
-          gh pr merge "$PR_URL" --merge --delete-branch
+          # Merge with retry: api.github.com occasionally throws transient TLS errors,
+          # which strand an otherwise-finished backup. A failed attempt may still have
+          # merged the PR, so check state before retrying.
+          MERGED=false
+          for i in 1 2 3; do
+            if gh pr merge "$PR_URL" --merge --delete-branch; then
+              MERGED=true
+              break
+            fi
+            if [ "$(gh pr view "$PR_URL" --json state --jq '.state' 2>/dev/null)" = "MERGED" ]; then
+              echo "PR was already merged on a prior attempt"
+              MERGED=true
+              break
+            fi
+            echo "Merge attempt ${i} failed, retrying in 15s..."
+            sleep 15
+          done
+
+          if [ "$MERGED" != "true" ]; then
+            echo "::error::Failed to merge ${PR_URL} after retries"
+            exit 1
+          fi
 
           {
             echo ""
