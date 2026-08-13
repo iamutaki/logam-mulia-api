@@ -1,5 +1,6 @@
 import { OpenAPIHono } from '@hono/zod-openapi';
 import { Scalar } from '@scalar/hono-api-reference';
+import { cors } from 'hono/cors';
 import { createErrorResponse, getHistoryBySource } from './lib';
 import { registerPriceFeatures } from './lib/feature-registry';
 import { registerNewsFeatures } from './lib/news-registry';
@@ -9,6 +10,16 @@ import healthRoute from './features/health';
 import { listSourcesRoute, historyRoute } from './lib/openapi-helpers';
 
 const app = new OpenAPIHono<{ Bindings: Bindings }>();
+
+app.use(
+	'*',
+	cors({
+		origin: '*',
+		allowMethods: ['GET', 'OPTIONS'],
+		allowHeaders: ['Content-Type'],
+		maxAge: 86400,
+	}),
+);
 
 app.route('/', rootRoute);
 app.route('/health', healthRoute);
