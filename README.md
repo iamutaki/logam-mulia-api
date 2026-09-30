@@ -14,17 +14,15 @@
 
 **Logam Mulia API** adalah _hobby project_ yang menyediakan _endpoint_ ringan untuk mengambil informasi harga emas dari berbagai sumber di Indonesia dalam format JSON yang konsisten. Cocok digunakan untuk dasbor harga emas, aplikasi tabungan emas, _bot_ notifikasi, atau riset data.
 
-### Program iklan (GitAds)
-
-Repository ini berpartisipasi dalam [GitAds](https://gitads.dev/) - iklan sponsor ditampilkan melalui _badge_ di bawah (bukan konten dalam kode API).
-
-[![Sponsored by GitAds](https://gitads.dev/v1/ad-serve?source=iamutaki/logam-mulia-api@github)](https://gitads.dev/v1/ad-track?source=iamutaki/logam-mulia-api@github)
-
 ## Showcase
+
+> Punya aplikasi atau karya yang ingin diperkenalkan ke lebih banyak orang?
+> **Buat PR untuk menambahkan aplikasimu ke dalam API ini.**
 
 Berikut beberapa aplikasi dan website yang menggunakan API ini:
 
-- **[Radar Emas](https://github.com/iamutaki/radar-emas)** ![Android](https://img.shields.io/badge/Android-3DDC84?logo=android&logoColor=white) - Aplikasi Android untuk memantau harga emas secara _real-time_.
+- **[Radar Emas](https://github.com/iamutaki/radar-emas)** Aplikasi Android untuk memantau harga emas by [IAMutaki](https://github.com/itamutaki).
+- **[Radar Emas Web](https://github.com/Sacchi4649/radar-emas)** Web untuk memantau pergerakan harga emas by [Sacchi4649](https://github.com/Sacchi4649).
 
 > Menggunakan API ini di project kamu? Silakan tambahkan melalui _pull request_ atau buat issue!
 
