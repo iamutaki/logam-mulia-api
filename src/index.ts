@@ -73,7 +73,7 @@ app.get('/api/prices/:source/history', async (c) => {
 
 app.openAPIRegistry.registerPath(historyRoute);
 
-app.doc('/api/docs/json', {
+app.doc('/api/docs/json', (c) => ({
 	openapi: '3.0.3',
 	info: {
 		title: 'Logam Mulia API',
@@ -81,14 +81,19 @@ app.doc('/api/docs/json', {
 			'API harga emas dan logam mulia dari berbagai sumber di Indonesia. Data discrape secara real-time dan di-cache per hari.',
 		version: '1.0.0',
 	},
-	servers: [{ url: 'http://localhost:8787', description: 'Development' }],
+	servers: [{ url: requestOrigin(c.req.url), description: 'Current' }],
 	tags: [
 		{ name: 'System', description: 'Root & health check' },
 		{ name: 'Sources', description: 'Daftar & harga dari sumber logam mulia' },
 		{ name: 'History', description: 'Riwayat harga' },
 		{ name: 'News', description: 'Berita logam mulia' },
 	],
-});
+}));
+
+function requestOrigin(href: string): string {
+	const path = href.indexOf('/', href.indexOf('://') + 3);
+	return path === -1 ? href : href.slice(0, path);
+}
 
 app.get('/api/docs', Scalar({ url: '/api/docs/json' }));
 
