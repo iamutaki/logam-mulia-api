@@ -63,6 +63,7 @@ Dokumentasi interaktif OpenAPI 3.0 (auto-generated via `@hono/zod-openapi`) ters
 | bankbsi | ✅ | [`/bankbsi`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/bankbsi) | [`/bankbsi/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/bankbsi/history) | ✅ |
 | brankaslm | ✅ | [`/brankaslm`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/brankaslm) | [`/brankaslm/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/brankaslm/history) | ✅ |
 | pegadaian | ✅ | [`/pegadaian`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/pegadaian) | [`/pegadaian/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/pegadaian/history) | ✅ |
+| pluang | ✅ | [`/pluang`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/pluang) | [`/pluang/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/pluang/history) | ✅ |
 
 ## Endpoint News
 

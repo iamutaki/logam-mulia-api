@@ -21,7 +21,6 @@
 - [ ] <https://goldprice.org/id/node/5306>
 - [ ] <https://gadaihartadinataabadi.com/harga-emas/>
 - [ ] <https://rajaemasindonesia.co.id/#hargaemas>
-- [ ] <https://pluang.com/asset/gold>
 - [ ] <https://antaremas.com/harga-emas/>
 - [ ] <https://bprsmam.co.id/emas>
 - [ ] <https://www.seputarforex.org/data/harga-emas-hari-ini>
@@ -44,6 +43,7 @@
 ## Done
 
 - [x] <https://www.logammulia.com/id>
+- [x] <https://pluang.com/asset/gold>
 
 ## Blocked
 

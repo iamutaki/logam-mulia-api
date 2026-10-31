@@ -45,6 +45,7 @@ import * as kursdolar from '../features/api/prices/kursdolar';
 import * as lakuemas from '../features/api/prices/lakuemas';
 import * as logammulia from '../features/api/prices/logammulia';
 import * as pegadaian from '../features/api/prices/pegadaian';
+import * as pluang from '../features/api/prices/pluang';
 import * as sakumas from '../features/api/prices/sakumas';
 import * as sampoernagold from '../features/api/prices/sampoernagold';
 import * as treasury from '../features/api/prices/treasury';
@@ -52,7 +53,7 @@ import * as treasury from '../features/api/prices/treasury';
 const priceModules: PriceFeatureModule[] = [
 	anekalogam, bankbsi, brankaslm, cermati, emasku, galeri24,
 	hargaemasCom, hargaemasNet, hargaemasOrg, hartadinataabadi,
-	indogold, kursdolar, lakuemas, logammulia, pegadaian,
+	indogold, kursdolar, lakuemas, logammulia, pegadaian, pluang,
 	sakumas, sampoernagold, treasury,
 ];
 
