@@ -1,50 +1,35 @@
-import type { JsonApiConfig } from '../../../../lib';
+import type { JinaMarkdownLabelPriceConfig } from '../../../../lib/scrapers/jina-markdown-label-scrape';
 
 /**
- * Validates Pluang pricing payload and flattens current sell/buy for selector mapping.
- * Throws so JsonApiScraper returns success:false instead of caching zero prices.
+ * Pluang public JSON API (`api-pluang.pluang.com`) returns Akamai 403 from
+ * Cloudflare Worker egress. Page markdown via Jina is the stable path (same idea as lakuemas).
+ *
+ * Domain mapping from pluang.com copy:
+ * - "Harga beli emas" = platform sell to user → sellPrice
+ * - "Harga jual kembali (buyback)" → buybackPrice
  */
-export function pluangPostProcess(raw: Record<string, unknown>): Record<string, string> {
-	const statusCode = raw.statusCode;
-	if (statusCode !== undefined && statusCode !== 200) {
-		throw new Error(`Pluang API statusCode ${String(statusCode)}`);
-	}
+export const pluangSellPriceRe =
+	/Harga beli emas\s+Rp\s*([\d.]+)\s+per gram/i;
 
-	const data = (raw.data as Record<string, unknown> | undefined) ?? {};
-	const current = (data.current as Record<string, unknown> | undefined) ?? {};
-	const sell = Number(current.sell);
-	const buy = Number(current.buy);
+export const pluangBuybackPriceRe =
+	/Harga jual kembali\s*\(buyback\)\s+Rp\s*([\d.]+)\s+per gram/i;
 
-	if (!Number.isFinite(sell) || sell <= 0 || !Number.isFinite(buy) || buy <= 0) {
-		throw new Error('Invalid Pluang gold prices');
-	}
-
-	return {
-		hargaJual: String(sell),
-		hargaBeli: String(buy),
-	};
-}
-
-export const pluangConfig: JsonApiConfig = {
+export const pluangConfig: JinaMarkdownLabelPriceConfig = {
 	name: 'pluang',
 	displayName: 'Pluang',
 	logo: '',
 	urlHomepage: 'https://pluang.com/asset/gold',
-	url: 'https://api-pluang.pluang.com/api/v3/asset/gold/pricing?daysLimit=0',
-	engine: 'axios',
-	responseType: 'json',
-	method: 'GET',
+	url: 'https://pluang.com/asset/gold',
 	currency: 'IDR',
-	headers: {
-		accept: 'application/json, text/plain, */*',
-	},
-	postProcess: (raw) => pluangPostProcess(raw),
-	selector: [
+	active: true,
+	items: [
 		{
-			sellPrice: 'hargaJual',
-			buybackPrice: 'hargaBeli',
 			weight: 1,
 			weightUnit: 'gram',
+			materialType: 'unknown',
+			material: 'gold',
+			sellPriceRegex: pluangSellPriceRe,
+			buybackPriceRegex: pluangBuybackPriceRe,
 		},
 	],
 };
