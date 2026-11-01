@@ -1,6 +1,6 @@
 import type { Bindings } from '../../../../types';
 import { parseCurrency } from '../../../../lib/utils/currency';
-import { JinaScraper } from '../../../../lib/scrapers/jina-scraper';
+import { JinaScraper, resolveJinaApiKeys } from '../../../../lib/scrapers/jina-scraper';
 import type { ScrapingOptions } from '../../../../lib/types/scraper.types';
 import { emaskuConfig } from './config';
 
@@ -77,7 +77,7 @@ export async function scrapeEmaskuForFetchOrCache(
 	}
 
 	try {
-		const scraper = new JinaScraper(env.JINA_API_KEY);
+		const scraper = new JinaScraper(resolveJinaApiKeys(env));
 		const { text } = await scraper.fetch(emaskuConfig.url, options);
 		const rows = parseEmaskuTable(text);
 

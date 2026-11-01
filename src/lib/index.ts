@@ -1,7 +1,7 @@
 // Scrapers
 export { HtmlScraper, CheerioScraper } from './scrapers/html-scraper';
 export { JsonApiScraper, AxiosScraper } from './scrapers/json-api-scraper';
-export { JinaScraper } from './scrapers/jina-scraper';
+export { JinaScraper, resolveJinaApiKeys } from './scrapers/jina-scraper';
 export {
 	buildJinaMarkdownLabelRows,
 	scrapeJinaMarkdownLabelForFetchOrCache,

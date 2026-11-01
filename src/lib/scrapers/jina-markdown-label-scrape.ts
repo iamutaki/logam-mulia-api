@@ -1,6 +1,6 @@
 import type { ScrapingOptions } from '../types/scraper.types';
 import { parseCurrency } from '../utils/currency';
-import { JinaScraper } from './jina-scraper';
+import { JinaScraper, resolveJinaApiKeys } from './jina-scraper';
 
 export interface JinaMarkdownLabelRowConfig {
 	/** Setara `materialType` di sumber Cheerio / `normalizePriceRows`. */
@@ -131,6 +131,7 @@ export function buildJinaMarkdownLabelRows(
 
 export type JinaMarkdownLabelScrapeEnv = {
 	JINA_API_KEY?: string;
+	JINA_API_KEYS?: string;
 };
 
 export type JinaMarkdownLabelErrorBody = {
@@ -193,7 +194,7 @@ export async function scrapeJinaMarkdownLabelPrices(
 	}
 
 	try {
-		const scraper = new JinaScraper(env.JINA_API_KEY);
+		const scraper = new JinaScraper(resolveJinaApiKeys(env));
 		const { text } = await scraper.fetch(cfg.url, options);
 		const items = buildJinaMarkdownLabelRows(text, cfg);
 
