@@ -2,6 +2,36 @@ import type { ScrapingOptions } from '../types/scraper.types';
 import { parseCurrency } from '../utils/currency';
 import { JinaScraper, resolveJinaApiKeys } from './jina-scraper';
 
+/**
+ * Direct fetch sumber (tanpa proxy) dengan header browser-like.
+ * Return null bila fetch gagal / non-200 — caller jatuh ke fallback Jina.
+ * ponytail: tanpa retry/backoff; upgrade ke fetchHtml di html-scraper bila perlu retry.
+ */
+async function fetchDirectText(
+	url: string,
+	options?: ScrapingOptions,
+): Promise<string | null> {
+	const controller = new AbortController();
+	const timeoutId = setTimeout(() => controller.abort(), options?.timeout ?? 15000);
+	try {
+		const response = await fetch(url, {
+			signal: controller.signal,
+			headers: {
+				Accept: 'text/html,application/xhtml+xml',
+				'User-Agent':
+					'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+			},
+			redirect: 'follow',
+		});
+		if (!response.ok) return null;
+		return await response.text();
+	} catch {
+		return null;
+	} finally {
+		clearTimeout(timeoutId);
+	}
+}
+
 export interface JinaMarkdownLabelRowConfig {
 	/** Setara `materialType` di sumber Cheerio / `normalizePriceRows`. */
 	materialType: string;
@@ -194,8 +224,20 @@ export async function scrapeJinaMarkdownLabelPrices(
 	}
 
 	try {
-		const scraper = new JinaScraper(resolveJinaApiKeys(env));
-		const { text } = await scraper.fetch(cfg.url, options);
+		// Direct fetch first (free, no proxy). Jina fallback if blocked/no prices.
+		let text: string | undefined;
+		try {
+			const direct = await fetchDirectText(cfg.url, options);
+			if (direct && buildJinaMarkdownLabelRows(direct, cfg).length > 0) {
+				text = direct;
+			}
+		} catch {
+			/* fall through to Jina */
+		}
+		if (!text) {
+			const scraper = new JinaScraper(resolveJinaApiKeys(env));
+			({ text } = await scraper.fetch(cfg.url, options));
+		}
 		const items = buildJinaMarkdownLabelRows(text, cfg);
 
 		if (items.length === 0) {

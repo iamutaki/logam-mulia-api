@@ -67,6 +67,9 @@ describe('JinaScraper key pool failover', () => {
 		await expect(scraper.fetch('https://example.com', { retries: 0, timeout: 5000 })).rejects.toThrow(
 			/402/,
 		);
-		expect(global.fetch).toHaveBeenCalledTimes(2);
+		// 2 keys + trailing anonymous fallback attempt
+		expect(global.fetch).toHaveBeenCalledTimes(3);
+		const lastCallHeaders = vi.mocked(global.fetch).mock.calls[2][1]?.headers as Record<string, string>;
+		expect(lastCallHeaders.Authorization).toBeUndefined();
 	});
 });

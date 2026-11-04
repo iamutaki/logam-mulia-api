@@ -49,7 +49,8 @@ export class JinaScraper {
 	async fetch(targetUrl: string, options?: ScrapingOptions): Promise<{ text: string; timestamp: string }> {
 		const proxyUrl = this.buildProxyUrl(targetUrl);
 		const maxAttempts = (options?.retries ?? 1) + 1;
-		const keyPool = this.apiKeys.length > 0 ? this.apiKeys : [undefined];
+		// Trailing `undefined` = last-resort anonymous attempt (Jina free tier, ~20 RPM).
+		const keyPool = this.apiKeys.length > 0 ? [...this.apiKeys, undefined] : [undefined];
 		let lastError: Error | null = null;
 
 		for (let keyIndex = 0; keyIndex < keyPool.length; keyIndex++) {
